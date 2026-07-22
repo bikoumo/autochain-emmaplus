@@ -20,7 +20,7 @@ class DemandeController extends Controller
         $demandes = Demande::orderBy('created_at', 'desc')->get();
 
         // Récupérer les tentatives de connexion échouées
-        $tentativesEchouees = Connexion::where('statut_connexion', 'échec')
+        $tentativesEchouees = Connexion::where('statut_connexion', 'echec')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -29,7 +29,7 @@ class DemandeController extends Controller
             'en_attente' => Demande::where('statut', 'en_attente')->count(),
             'validees' => Demande::where('statut', 'validee')->count(),
             'refusees' => Demande::where('statut', 'refusee')->count(),
-            'tentatives_echouees' => Connexion::where('statut_connexion', 'échec')->count(),
+            'tentatives_echouees' => Connexion::where('statut_connexion', 'echec')->count(),
         ];
 
         return view('admin.demandes', compact('demandes', 'tentativesEchouees', 'stats'));

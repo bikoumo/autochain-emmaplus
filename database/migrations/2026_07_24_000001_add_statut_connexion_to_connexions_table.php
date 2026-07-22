@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('connexions', function (Blueprint $table) {
-            $table->enum('statut_connexion', ['succès', 'échec'])->default('succès')->after('statut_blocage');
+            $table->string('statut_connexion', 20)->default('succes')->after('statut_blocage');
         });
     }
 

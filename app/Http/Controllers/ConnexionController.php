@@ -46,7 +46,7 @@ class ConnexionController extends Controller
                 'telephone' => '',
                 'role' => 'inconnu',
                 'statut_blocage' => 'actif',
-                'statut_connexion' => 'échec',
+                'statut_connexion' => 'echec',
                 'ip_adresse' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ]);
@@ -67,7 +67,7 @@ class ConnexionController extends Controller
                 'telephone' => $utilisateur->telephone,
                 'role' => $utilisateur->role,
                 'statut_blocage' => $utilisateur->statut_blocage,
-                'statut_connexion' => 'échec',
+                'statut_connexion' => 'echec',
                 'ip_adresse' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ]);
@@ -86,7 +86,7 @@ class ConnexionController extends Controller
                 'telephone' => $utilisateur->telephone,
                 'role' => $utilisateur->role,
                 'statut_blocage' => $utilisateur->statut_blocage,
-                'statut_connexion' => 'échec',
+                'statut_connexion' => 'echec',
                 'ip_adresse' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ]);
@@ -103,7 +103,7 @@ class ConnexionController extends Controller
             'telephone' => $utilisateur->telephone,
             'role' => $utilisateur->role,
             'statut_blocage' => $utilisateur->statut_blocage,
-            'statut_connexion' => 'succès',
+            'statut_connexion' => 'succes',
             'ip_adresse' => $request->ip(),
             'user_agent' => $request->userAgent(),
         ]);

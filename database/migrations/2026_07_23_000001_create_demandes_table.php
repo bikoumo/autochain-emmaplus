@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('telephone')->nullable();
             $table->string('wallet_saisi')->nullable(); // wallet qu'il a tenté d'utiliser
             $table->string('role_souhaite')->nullable(); // rôle qu'il a choisi dans le select
-            $table->enum('statut', ['en_attente', 'validee', 'refusee'])->default('en_attente');
+            $table->string('statut', 20)->default('en_attente');
             $table->text('message')->nullable(); // message optionnel
             $table->string('ip_adresse')->nullable();
             $table->string('user_agent')->nullable();
