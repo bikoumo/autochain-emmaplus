@@ -54,4 +54,4 @@ EXPOSE 80
 
 # Script de démarrage : lance les migrations SQLite puis démarre Apache
 # Exemple de commande finale (CMD) dans ton Dockerfile
-CMD php artisan config:clear && php artisan migrate:fresh --seed --force && php artisan serve --host=0.0.0.0 --port=10000CMD php artisan config:clear && php artisan migrate:fresh --seed --force && php artisan serve --host=0.0.0.0 --port=10000
+CMD ["apache2-foreground"]
