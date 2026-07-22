@@ -37,3 +37,14 @@ RUN composer install --no-dev --optimize-autoloader
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 80
+# Créer le fichier de base de données SQLite et lancer les migrations/optimisations
+RUN mkdir -p /var/www/html/database \
+    && touch /var/www/html/database/database.sqlite \
+    && chown -R www-data:www-data /var/www/html/database \
+    && chmod -R 775 /var/www/html/database
+
+# Exécuter les migrations Laravel au démarrage
+RUN php artisan migrate --force
+
+EXPOSE 80
+CMD ["apache2-foreground"]
