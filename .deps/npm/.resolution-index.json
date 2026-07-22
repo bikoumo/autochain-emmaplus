@@ -1,0 +1,10 @@
+{
+  "Blockchain/contracts/contracts/VehicleRegistry.sol": {
+    "__sources__": {
+      "Blockchain/contracts/contracts/VehicleRegistry.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.0;\r\n\r\n/**\r\n * @title VehicleRegistry\r\n * @dev Enregistrement immuable des preuves d'entretien et kilométrage\r\n */\r\ncontract VehicleRegistry {\r\n    \r\n    // Mapping : VIN -> Liste de hashs d'entretien (Preuve d'intégrité)\r\n    mapping(string => bytes32[]) public maintenanceHashes;\r\n    \r\n    // Mapping : VIN -> Kilométrage certifié\r\n    mapping(string => uint256) public certifiedMileage;\r\n\r\n    // Événement pour notifier le backend Django qu'une mise à jour a eu lieu\r\n    event RecordUpdated(string vin, string operationType);\r\n\r\n    // Fonction pour enregistrer une preuve d'entretien (le hash du PDF par ex.)\r\n    function recordMaintenance(string memory vin, bytes32 _hash) public {\r\n        maintenanceHashes[vin].push(_hash);\r\n        emit RecordUpdated(vin, \"MAINTENANCE\");\r\n    }\r\n\r\n    // Fonction pour mettre à jour le kilométrage certifié\r\n    function updateMileage(string memory vin, uint256 mileage) public {\r\n        certifiedMileage[vin] = mileage;\r\n        emit RecordUpdated(vin, \"MILEAGE_UPDATE\");\r\n    }\r\n}",
+        "file": "Blockchain/contracts/contracts/VehicleRegistry.sol"
+      }
+    }
+  }
+}
