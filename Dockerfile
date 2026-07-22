@@ -20,30 +20,37 @@ RUN docker-php-ext-install pdo_mysql pdo_sqlite mbstring exif pcntl bcmath gd
 # Activer mod_rewrite pour Apache
 RUN a2enmod rewrite
 
+# Configurer proprement le VirtualHost d'Apache pour pointer vers le dossier public de Laravel
+RUN echo '<VirtualHost *:80>' \
+    && echo '    ServerAdmin webmaster@localhost' \
+    && echo '    DocumentRoot /var/www/html/public' \
+    && echo '    <Directory /var/www/html/public>' \
+    && echo '        Options Indexes FollowSymLinks' \
+    && echo '        AllowOverride All' \
+    && echo '        Require all granted' \
+    && echo '    </Directory>' \
+    && echo '    ErrorLog ${APACHE_LOG_DIR}/error.log' \
+    && echo '    CustomLog ${APACHE_LOG_DIR}/access.log combined' \
+    && echo '</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+
 # Copier les fichiers du projet
 COPY . /var/www/html
-
-# Définir le dossier public comme racine d'Apache
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -s 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -s 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 WORKDIR /var/www/html
 
 # Installer les dépendances PHP via Composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Permissions pour Laravel
+# Permissions pour Laravel (storage et bootstrap/cache)
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-EXPOSE 80
-# Créer le fichier de base de données SQLite et lancer les migrations/optimisations
+# Créer le fichier de base de données SQLite et ajuster ses permissions
 RUN mkdir -p /var/www/html/database \
     && touch /var/www/html/database/database.sqlite \
     && chown -R www-data:www-data /var/www/html/database \
     && chmod -R 775 /var/www/html/database
 
-# Exécuter les migrations Laravel au démarrage
+# Exécuter les migrations Laravel au build
 RUN php artisan migrate --force
 
 EXPOSE 80
