@@ -50,8 +50,7 @@ RUN mkdir -p /var/www/html/database \
     && chown -R www-data:www-data /var/www/html/database \
     && chmod -R 775 /var/www/html/database
 
-# Exécuter les migrations Laravel au build
-RUN php artisan migrate --force
-
 EXPOSE 80
-CMD ["apache2-foreground"]
+
+# Script de démarrage : lance les migrations SQLite puis démarre Apache
+CMD php artisan migrate --force && apache2-foreground
