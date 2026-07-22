@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# Installer les extensions et dépendances nécessaires
+# Installer les extensions et dépendances nécessaires (avec PostgreSQL)
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -10,12 +10,11 @@ RUN apt-get update && apt-get install -y \
     git \
     libonig-dev \
     libxml2-dev \
-    sqlite3 \
-    libsqlite3-dev \
+    libpq-dev \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install pdo_mysql pdo_sqlite mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd
 
 # Activer mod_rewrite pour Apache
 RUN a2enmod rewrite
@@ -44,14 +43,12 @@ RUN composer install --no-dev --optimize-autoloader
 # Permissions pour Laravel (storage et bootstrap/cache)
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Créer le fichier de base de données SQLite et ajuster ses permissions
-RUN mkdir -p /var/www/html/database \
-    && touch /var/www/html/database/database.sqlite \
-    && chown -R www-data:www-data /var/www/html/database \
-    && chmod -R 775 /var/www/html/database
+# Copier et rendre exécutable le script de démarrage d'entrypoint
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 80
 
-# Script de démarrage : lance les migrations SQLite puis démarre Apache
-# Exemple de commande finale (CMD) dans ton Dockerfile
+# Utiliser le script entrypoint pour lancer les migrations puis Apache
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
